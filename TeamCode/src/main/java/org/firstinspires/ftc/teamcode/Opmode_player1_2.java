@@ -34,8 +34,8 @@ public class Opmode_player1_2 extends LinearOpMode {
        // telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-        telehwp.Lift_pulleys.setTargetPosition(0);
-        telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //telehwp.Lift_pulleys.setTargetPosition(0);
+        //telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         /*telehwp.Leftfront1.setTargetPosition(0);
         telehwp.Leftfront2.setTargetPosition(0);
