@@ -107,10 +107,7 @@ public class Opmode_player1_2 extends LinearOpMode {
             //telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-            if (Math.abs(gamepad2.right_stick_y) > 0.05) {
-                telehwp.Lift_pulleys.setPower(gamepad2.right_stick_y);
-                telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            }
+            telehwp.Lift_pulleys.setPower(gamepad2.right_stick_y);
             System.out.println(telehwp.Lift_pulleys.getPower());
 
             M1= (gamepad1.left_stick_y-(gamepad1.left_stick_x*0.9)-(gamepad1.right_stick_x/2))*MotorMaxspeed;
