@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @TeleOp(name="player1 and player2")
 public class Opmode_player1_2 extends LinearOpMode {
@@ -16,7 +17,8 @@ public class Opmode_player1_2 extends LinearOpMode {
     double MS=3;
 
     double M1,M2,M3,M4;
-    double MotorMaxspeed=1;//0.7  0.4
+    double MotorMaxspeed=0.7;//0.7  0.4
+
 
 
     @Override
@@ -31,7 +33,7 @@ public class Opmode_player1_2 extends LinearOpMode {
         telehwp.Rightfront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         telehwp.Rightback.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-       // telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         //telehwp.Lift_pulleys.setTargetPosition(0);
@@ -47,10 +49,11 @@ public class Opmode_player1_2 extends LinearOpMode {
         telemetry.update();
 
         //急停BRAKE 漂浮FLOAT
-        telehwp.Leftfront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        telehwp.Rightfront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        telehwp.Leftback.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        telehwp.Rightback.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        telehwp.Leftfront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        telehwp.Rightfront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        telehwp.Leftback.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        telehwp.Rightback.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        telehwp.Lift_pulleys.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
         while (opModeIsActive()){
@@ -66,13 +69,13 @@ public class Opmode_player1_2 extends LinearOpMode {
             int position3 = telehwp.Leftback.getCurrentPosition();
             int position4 = telehwp.Rightback.getCurrentPosition();
 
-            //double Lift_pulleys = telehwp.Lift_pulleys.getCurrentPosition();
+            double Lift_pulleys = telehwp.Lift_pulleys.getCurrentPosition();
 
             telemetry.addData("Leftfront Position", position1);
             telemetry.addData("Rightfront Position", position2);
             telemetry.addData("Leftback Position", position3);
             telemetry.addData("Rightback Position", position4);
-           // telemetry.addData("Lift_pulleys",Lift_pulleys);
+            telemetry.addData("Lift_pulleys",Lift_pulleys);
             telemetry.update();
 
             /*    p1 += gamepad2.left_stick_x * a;
@@ -159,15 +162,59 @@ public class Opmode_player1_2 extends LinearOpMode {
                 telehwp.Rightback.setPower(-MinS*motorspeed);
             }
 
-            if (gamepad2.y){
+            if (gamepad2.right_bumper){
                 telehwp.Catch.setPosition(0);
             }
-            if (gamepad2.x){
+            if (gamepad2.left_bumper){
                 telehwp.Catch.setPosition(1);
             }
 
+            /* if (gamepad2.a){
+                int targetedPosition = 570;
+                telehwp.Lift_pulleys.setTargetPosition(targetedPosition);
+                if (telehwp.Lift_pulleys.getCurrentPosition() < targetedPosition) telehwp.Lift_pulleys.setPower(0.2);
+                else telehwp.Lift_pulleys.setPower(-0.4);
+                while (Math.abs(telehwp.Lift_pulleys.getCurrentPosition() - targetedPosition) > 20) {
+                    // Thread.yield();
+                    System.out.println(telehwp.Lift_pulleys.getCurrentPosition());
+                }
+                telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                telehwp.Lift_pulleys.setVelocity(0);
+            } else if (gamepad2.b) {
+                int targetedPosition = 956;
+                telehwp.Lift_pulleys.setTargetPosition(targetedPosition);
+                if (telehwp.Lift_pulleys.getCurrentPosition() < targetedPosition) telehwp.Lift_pulleys.setPower(0.2);
+                else telehwp.Lift_pulleys.setPower(-0.4);
+                while (Math.abs(telehwp.Lift_pulleys.getCurrentPosition() - targetedPosition) > 20) {
+                    // Thread.yield();
+                    System.out.println(telehwp.Lift_pulleys.getCurrentPosition());
+                }
+                telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                telehwp.Lift_pulleys.setVelocity(0);
+            } else if(gamepad2.y) {
+                int targetedPosition = 1303;
+                telehwp.Lift_pulleys.setTargetPosition(targetedPosition);
+                if (telehwp.Lift_pulleys.getCurrentPosition() < targetedPosition) telehwp.Lift_pulleys.setPower(0.2);
+                else telehwp.Lift_pulleys.setPower(-0.4);
+                while (Math.abs(telehwp.Lift_pulleys.getCurrentPosition() - targetedPosition) > 20) {
+                    // Thread.yield();
+                    System.out.println(telehwp.Lift_pulleys.getCurrentPosition());
+                }
+                telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                telehwp.Lift_pulleys.setVelocity(0);
+            }else if(gamepad2.x) {
+                int targetedPosition = 0;
+                telehwp.Lift_pulleys.setTargetPosition(targetedPosition);
+                if (telehwp.Lift_pulleys.getCurrentPosition() < targetedPosition) telehwp.Lift_pulleys.setPower(0.2);
+                else telehwp.Lift_pulleys.setPower(-0.4);
+                while (Math.abs(telehwp.Lift_pulleys.getCurrentPosition() - targetedPosition) > 20) {
+                    // Thread.yield();
+                    System.out.println(telehwp.Lift_pulleys.getCurrentPosition());
+                }
+                telehwp.Lift_pulleys.setVelocity(0);
+            }
 
-            //telehwp.arm_motor.setPower(gamepad1.right_stick_x);
+            //telehwp.arm_motor.setPower(gamepad1.right_stick_x); */
 
         }
 
