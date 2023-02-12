@@ -107,9 +107,11 @@ public class Opmode_player1_2 extends LinearOpMode {
             //telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-            if (Math.abs(gamepad2.right_stick_y) > 0.05) telehwp.Lift_pulleys.setPower(gamepad2.right_stick_y);
-            else if (telehwp.Lift_pulleys.getVelocity() < -10) {
+            if (Math.abs(gamepad2.right_stick_y * 0.4) > 0.05) telehwp.Lift_pulleys.setPower(
+                    Math.copySign(gamepad2.right_stick_y * gamepad2.right_stick_y, gamepad2.right_stick_y) *0.4);
+            else if (telehwp.Lift_pulleys.getVelocity() < -100) {
                 telehwp.Lift_pulleys.setPower(-0.5);
+                System.out.println(telehwp.Lift_pulleys.getVelocity());
             } else {
                 telehwp.Lift_pulleys.setPower(0);
             }
