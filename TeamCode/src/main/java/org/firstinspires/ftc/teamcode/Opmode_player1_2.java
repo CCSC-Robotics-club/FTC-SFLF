@@ -107,8 +107,12 @@ public class Opmode_player1_2 extends LinearOpMode {
             //telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-            telehwp.Lift_pulleys.setPower(gamepad2.right_stick_y);
-            System.out.println(telehwp.Lift_pulleys.getPower());
+            if (Math.abs(gamepad2.right_stick_y) > 0.05) telehwp.Lift_pulleys.setPower(gamepad2.right_stick_y);
+            else if (telehwp.Lift_pulleys.getVelocity() < -10) {
+                telehwp.Lift_pulleys.setPower(-0.5);
+            } else {
+                telehwp.Lift_pulleys.setPower(0);
+            }
 
             M1= (gamepad1.left_stick_y-(gamepad1.left_stick_x*0.9)-(gamepad1.right_stick_x/2))*MotorMaxspeed;
             M2= (gamepad1.left_stick_y+(gamepad1.left_stick_x*0.9)+(gamepad1.right_stick_x/2))*MotorMaxspeed;
@@ -170,10 +174,10 @@ public class Opmode_player1_2 extends LinearOpMode {
                 telehwp.Catch.setPosition(1);
             }
 
-            if (gamepad2.y) {
-                setArmPosition(0);
-            }
-
+            if (gamepad2.y) setArmPosition(1303);
+            if (gamepad2.x) setArmPosition(956);
+            if (gamepad2.b) setArmPosition(570);
+            if (gamepad2.a) setArmPosition(0);
         }
     }
     private void setArmPosition(int armPosition) {
@@ -181,15 +185,17 @@ public class Opmode_player1_2 extends LinearOpMode {
         boolean isIncline = armPosition > telehwp.Lift_pulleys.getCurrentPosition();
         if (isIncline) {
             telehwp.Lift_pulleys.setPower(-0.2);
-            while (armPosition - telehwp.Lift_pulleys.getCurrentPosition() > 200) Thread.yield(); // wait for the arm to go to the targeted position, yield the thread so that it's not stuck
-            telehwp.Lift_pulleys.setPower(0.1);
-            while (telehwp.Lift_pulleys.getVelocity() > 20) Thread.yield();
+            while (armPosition - telehwp.Lift_pulleys.getCurrentPosition() > 50) Thread.yield(); // wait for the arm to go to the targeted position, yield the thread so that it's not stuck
+            // while (armPosition - telehwp.Lift_pulleys.getCurrentPosition() > 50) System.out.println(telehwp.Lift_pulleys.getCurrentPosition()); // wait for the arm to go to the targeted position, yield the thread so that it's not stuck
+            telehwp.Lift_pulleys.setPower(0.5);
+            // while (telehwp.Lift_pulleys.getVelocity() > 10) Thread.yield();
+            while (telehwp.Lift_pulleys.getVelocity() > 10) System.out.println(telehwp.Lift_pulleys.getVelocity());
             telehwp.Lift_pulleys.setPower(0);
         } else {
             telehwp.Lift_pulleys.setPower(0.1);
-            while (telehwp.Lift_pulleys.getCurrentPosition() - armPosition > 200) Thread.yield();
-            telehwp.Lift_pulleys.setPower(-0.2);
-            while (telehwp.Lift_pulleys.getVelocity() < -20) Thread.yield();
+            while (telehwp.Lift_pulleys.getCurrentPosition() - armPosition > 50) Thread.yield();
+            telehwp.Lift_pulleys.setPower(-0.5);
+            while (telehwp.Lift_pulleys.getVelocity() < -10) Thread.yield();
             telehwp.Lift_pulleys.setPower(0);
         }
 
