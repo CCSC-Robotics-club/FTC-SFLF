@@ -109,9 +109,10 @@ public class Opmode_player1_2 extends LinearOpMode {
 
             if (Math.abs(gamepad2.right_stick_y * 0.4) > 0.05) telehwp.Lift_pulleys.setPower(gamepad2.right_stick_y*0.4);
             else if (telehwp.Lift_pulleys.getVelocity() < -100) {
-                double maxVelocity = 2000;
+                double maxVelocity = 700;
                 double maxBreakingPower = 1;
-                telehwp.Lift_pulleys.setPower(telehwp.Lift_pulleys.getVelocity() / maxVelocity * maxBreakingPower);
+                telehwp.Lift_pulleys.setPower(Math.max(-1,
+                        telehwp.Lift_pulleys.getVelocity() / maxVelocity * maxBreakingPower));
                 System.out.println(telehwp.Lift_pulleys.getVelocity());
             } else {
                 telehwp.Lift_pulleys.setPower(0);
