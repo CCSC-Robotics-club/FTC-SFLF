@@ -107,10 +107,11 @@ public class Opmode_player1_2 extends LinearOpMode {
             //telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-            if (Math.abs(gamepad2.right_stick_y * 0.4) > 0.05) telehwp.Lift_pulleys.setPower(
-                    Math.copySign(gamepad2.right_stick_y * gamepad2.right_stick_y, gamepad2.right_stick_y) *0.4);
+            if (Math.abs(gamepad2.right_stick_y * 0.4) > 0.05) telehwp.Lift_pulleys.setPower(gamepad2.right_stick_y*0.4);
             else if (telehwp.Lift_pulleys.getVelocity() < -100) {
-                telehwp.Lift_pulleys.setPower(-0.5);
+                double maxVelocity = 2000;
+                double maxBreakingPower = 1;
+                telehwp.Lift_pulleys.setPower(telehwp.Lift_pulleys.getVelocity() / maxVelocity * maxBreakingPower);
                 System.out.println(telehwp.Lift_pulleys.getVelocity());
             } else {
                 telehwp.Lift_pulleys.setPower(0);
@@ -188,17 +189,18 @@ public class Opmode_player1_2 extends LinearOpMode {
         if (isIncline) {
             telehwp.Lift_pulleys.setPower(-0.2);
             while (armPosition - telehwp.Lift_pulleys.getCurrentPosition() > 50) Thread.yield(); // wait for the arm to go to the targeted position, yield the thread so that it's not stuck
-            // while (armPosition - telehwp.Lift_pulleys.getCurrentPosition() > 50) System.out.println(telehwp.Lift_pulleys.getCurrentPosition()); // wait for the arm to go to the targeted position, yield the thread so that it's not stuck
+            /*
             telehwp.Lift_pulleys.setPower(0.5);
             // while (telehwp.Lift_pulleys.getVelocity() > 10) Thread.yield();
             while (telehwp.Lift_pulleys.getVelocity() > 10) System.out.println(telehwp.Lift_pulleys.getVelocity());
-            telehwp.Lift_pulleys.setPower(0);
+            telehwp.Lift_pulleys.setPower(0); */
         } else {
             telehwp.Lift_pulleys.setPower(0.1);
             while (telehwp.Lift_pulleys.getCurrentPosition() - armPosition > 50) Thread.yield();
+            /*
             telehwp.Lift_pulleys.setPower(-0.5);
             while (telehwp.Lift_pulleys.getVelocity() < -10) Thread.yield();
-            telehwp.Lift_pulleys.setPower(0);
+            telehwp.Lift_pulleys.setPower(0); */
         }
 
     }
