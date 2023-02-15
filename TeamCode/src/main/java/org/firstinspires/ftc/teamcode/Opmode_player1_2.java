@@ -107,7 +107,16 @@ public class Opmode_player1_2 extends LinearOpMode {
             //telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-            telehwp.Lift_pulleys.setPower(gamepad2.right_stick_y);
+            if (Math.abs(gamepad2.right_stick_y * 0.4) > 0.05) telehwp.Lift_pulleys.setPower(gamepad2.right_stick_y*0.4);
+            else if (telehwp.Lift_pulleys.getVelocity() < -100) {
+                double maxVelocity = 700;
+                double maxBreakingPower = 1;
+                telehwp.Lift_pulleys.setPower(Math.max(-1,
+                        telehwp.Lift_pulleys.getVelocity() / maxVelocity * maxBreakingPower));
+                System.out.println(telehwp.Lift_pulleys.getVelocity());
+            } else {
+                telehwp.Lift_pulleys.setPower(0);
+            }
 
             M1= (gamepad1.left_stick_y-(gamepad1.left_stick_x*0.9)-(gamepad1.right_stick_x/2))*MotorMaxspeed;
             M2= (gamepad1.left_stick_y+(gamepad1.left_stick_x*0.9)+(gamepad1.right_stick_x/2))*MotorMaxspeed;
@@ -169,53 +178,30 @@ public class Opmode_player1_2 extends LinearOpMode {
                 telehwp.Catch.setPosition(1);
             }
 
-            /* if (gamepad2.a){
-                int targetedPosition = 570;
-                telehwp.Lift_pulleys.setTargetPosition(targetedPosition);
-                if (telehwp.Lift_pulleys.getCurrentPosition() < targetedPosition) telehwp.Lift_pulleys.setPower(0.2);
-                else telehwp.Lift_pulleys.setPower(-0.4);
-                while (Math.abs(telehwp.Lift_pulleys.getCurrentPosition() - targetedPosition) > 20) {
-                    // Thread.yield();
-                    System.out.println(telehwp.Lift_pulleys.getCurrentPosition());
-                }
-                telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                telehwp.Lift_pulleys.setVelocity(0);
-            } else if (gamepad2.b) {
-                int targetedPosition = 956;
-                telehwp.Lift_pulleys.setTargetPosition(targetedPosition);
-                if (telehwp.Lift_pulleys.getCurrentPosition() < targetedPosition) telehwp.Lift_pulleys.setPower(0.2);
-                else telehwp.Lift_pulleys.setPower(-0.4);
-                while (Math.abs(telehwp.Lift_pulleys.getCurrentPosition() - targetedPosition) > 20) {
-                    // Thread.yield();
-                    System.out.println(telehwp.Lift_pulleys.getCurrentPosition());
-                }
-                telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                telehwp.Lift_pulleys.setVelocity(0);
-            } else if(gamepad2.y) {
-                int targetedPosition = 1303;
-                telehwp.Lift_pulleys.setTargetPosition(targetedPosition);
-                if (telehwp.Lift_pulleys.getCurrentPosition() < targetedPosition) telehwp.Lift_pulleys.setPower(0.2);
-                else telehwp.Lift_pulleys.setPower(-0.4);
-                while (Math.abs(telehwp.Lift_pulleys.getCurrentPosition() - targetedPosition) > 20) {
-                    // Thread.yield();
-                    System.out.println(telehwp.Lift_pulleys.getCurrentPosition());
-                }
-                telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                telehwp.Lift_pulleys.setVelocity(0);
-            }else if(gamepad2.x) {
-                int targetedPosition = 0;
-                telehwp.Lift_pulleys.setTargetPosition(targetedPosition);
-                if (telehwp.Lift_pulleys.getCurrentPosition() < targetedPosition) telehwp.Lift_pulleys.setPower(0.2);
-                else telehwp.Lift_pulleys.setPower(-0.4);
-                while (Math.abs(telehwp.Lift_pulleys.getCurrentPosition() - targetedPosition) > 20) {
-                    // Thread.yield();
-                    System.out.println(telehwp.Lift_pulleys.getCurrentPosition());
-                }
-                telehwp.Lift_pulleys.setVelocity(0);
-            }
-
-            //telehwp.arm_motor.setPower(gamepad1.right_stick_x); */
-
+            if (gamepad2.y) setArmPosition(1303);
+            if (gamepad2.x) setArmPosition(956);
+            if (gamepad2.b) setArmPosition(570);
+            if (gamepad2.a) setArmPosition(0);
+        }
+    }
+    private void setArmPosition(int armPosition) {
+        telehwp.Lift_pulleys.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        boolean isIncline = armPosition > telehwp.Lift_pulleys.getCurrentPosition();
+        if (isIncline) {
+            telehwp.Lift_pulleys.setPower(-0.2);
+            while (armPosition - telehwp.Lift_pulleys.getCurrentPosition() > 50) Thread.yield(); // wait for the arm to go to the targeted position, yield the thread so that it's not stuck
+            /*
+            telehwp.Lift_pulleys.setPower(0.5);
+            // while (telehwp.Lift_pulleys.getVelocity() > 10) Thread.yield();
+            while (telehwp.Lift_pulleys.getVelocity() > 10) System.out.println(telehwp.Lift_pulleys.getVelocity());
+            telehwp.Lift_pulleys.setPower(0); */
+        } else {
+            telehwp.Lift_pulleys.setPower(0.1);
+            while (telehwp.Lift_pulleys.getCurrentPosition() - armPosition > 50) Thread.yield();
+            /*
+            telehwp.Lift_pulleys.setPower(-0.5);
+            while (telehwp.Lift_pulleys.getVelocity() < -10) Thread.yield();
+            telehwp.Lift_pulleys.setPower(0); */
         }
 
     }
